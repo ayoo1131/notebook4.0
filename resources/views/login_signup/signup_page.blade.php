@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Signup</title>
+	<title>toNotebookPage Signup</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
 	<link rel="stylesheet" href="{{ url('/css/style.css') }}">

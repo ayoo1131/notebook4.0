@@ -16,16 +16,23 @@ class SignupController extends Controller
         $validator =  Validator::make($request->all(), [
             'username' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'min:8', 'same:password'],
+            'password' => ['required', 'min:8', 'same:password_repeat'],
             'password_repeat' => ['required']
         ]);
 
+        //Custom Validation Rules
         $validator->after(function ($validator) {
             //Custom username validation rule
-            $num_returned_rows = sizeof(DB::select("SELECT * FROM users WHERE username =?", [request('username')]));
-            if ($num_returned_rows >= 1)//Username already exists in the database
+            $num_returned_rows_username = sizeof(DB::select("SELECT * FROM users WHERE username =?", [request('username')]));
+            if ($num_returned_rows_username >= 1)//Username already exists in the database
             {
-                $validator->errors()->add('username', 'Something is wrong with this field!');
+                $validator->errors()->add('username', 'Username is not avaliable');
+            }
+
+            $num_returned_rows_email = sizeof(DB::select("SELECT * FROM users WHERE email =?", [request('email')]));
+            if ($num_returned_rows_email >= 1)//Username already exists in the database
+            {
+                $validator->errors()->add('email', 'Email has already been registered');
             }
 
             //Custom password validation rules
@@ -43,18 +50,17 @@ class SignupController extends Controller
 
         $validator -> validate();
 
-        if ($validator -> fails())
+        if ($validator -> fails())//Return to the signup page if validation fails
         {
             return redirect('/signup_page');
         }
 
-        else
+        else//Add a new User to the database
         {
-            //Add a new User to the database
             User::create([
-                'email' => request('email'),
+                'email' => strtolower(request('email')),
                 'password' => Hash::make(request('password')),
-                'username' => request('username')
+                'username' => strtolower(request('username'))
             ]);
             return redirect('/login_page')->with('signup_message_success',"User Successfully Created");
         }

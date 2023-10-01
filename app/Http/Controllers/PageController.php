@@ -13,8 +13,4 @@ class PageController extends Controller
     public function toLoginPage(){
         return view('login_signup/login_page');
     }
-
-    public function toNotebookPage(){
-        return view('notebook/notebook_page');
-    }
 }

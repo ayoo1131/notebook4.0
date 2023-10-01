@@ -2,7 +2,7 @@
 
 <html>
 <head>
-	<title>Notebook Signup</title>
+	<title>Notebook Login</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
 	<link rel="stylesheet" href="{{ url('/css/style.css') }}">
@@ -17,19 +17,27 @@
 	@endif
 
 	@if (Session::has('login_message_error'))
-		<p class='sign_up_error'>{!! session('login_message_error')!!}</p>
+		<p class="login_error">{!! session('login_message_error')!!}</p>
 	@endif
 
-	<form action="login_existing_user" method="post">
+	<form action="login_user" method="post">
 		@csrf
+
 		<div>
 			<label for="username">Username</label>
 			<input type="test" id="username" name="username">
+			@if ($errors->has('username'))
+                <p class="sign_up_error">{{ $errors->first('username') }}</p>
+            @endif
+
 		</div>
 	
 		<div>
 			<label for="password">Password</label>
 			<input type="password" id="password" name="password">
+			@if ($errors->has('password'))
+                <p class="sign_up_error">{{ $errors->first('password') }}</p>
+            @endif
 		</div>
 
 		<div>
