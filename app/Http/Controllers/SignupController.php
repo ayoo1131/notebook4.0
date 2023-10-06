@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use File;
+use Illuminate\Support\Facades\Storage;
 
 class SignupController extends Controller
 {
@@ -21,9 +23,11 @@ class SignupController extends Controller
         ]);
 
         //Custom Validation Rules
-        $validator->after(function ($validator) {
+        $validator->after(function ($validator) 
+        {
             //Custom username validation rule
             $num_returned_rows_username = sizeof(DB::select("SELECT * FROM users WHERE username =?", [request('username')]));
+            
             if ($num_returned_rows_username >= 1)//Username already exists in the database
             {
                 $validator->errors()->add('username', 'Username is not avaliable');
@@ -62,6 +66,14 @@ class SignupController extends Controller
                 'password' => Hash::make(request('password')),
                 'username' => strtolower(request('username'))
             ]);
+
+            $username = request('username');
+            //Create a new directory for the user's files
+            if(!Storage::disk('local')->exists('notebook_users/'.$username)) {
+                Storage::disk('local')->makeDirectory('notebook_users/'.$username, 0777, true, true);
+                //Storage::makeDirectory($path, $mode, $recursive(throught the whole directory), $force)
+            } 
+
             return redirect('/login_page')->with('signup_message_success',"User Successfully Created");
         }
     }

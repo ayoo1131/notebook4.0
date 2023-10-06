@@ -9,12 +9,14 @@
 </head>
 
 <body>
-
 	@if(isset(Auth::user()->username))
 		<div class="alert alert-danger success-block">
-		<strong>Welcome {{ Auth::user()->username }}</strong><br>
-		<p>{{Auth::user()->email}}</p>
-		<a href="{{ url('logout') }}">Logout</a>
+			<h1>{{ Auth::user()->username }}'s Notebook</h1>
+
+			<form action='logout'>
+				<button type="submit" style="position:absolute; right:0; top:0">Logout</button>
+			</form>
+
 		</div>
   	@else
     	<script>window.location = "login_page";</script>
